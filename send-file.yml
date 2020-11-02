@@ -1,0 +1,7 @@
+---
+- hosts: all
+  tasks:
+    - name: copy file to remote host
+      copy:
+        src: /source
+        dest: /tmp/
