@@ -1,0 +1,8 @@
+--
+- name: executar comandos
+  hosts: all
+  become: yes
+  tasks:
+   - name: Executar comando
+     shell:
+      cmd: ifconfig
