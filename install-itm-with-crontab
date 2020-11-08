@@ -1,0 +1,56 @@
+
+unzip ITM_Linux_for_SO_x86_64.zip -d /tmp/
+chmod -R 777 /tmp/
+rpm -i /tmp/ITM_Linux_for_SO_x86_64/data/ksh-93vu-16.6.x86_64.rpm
+rpm -i /tmp/ITM_Linux_for_SO_x86_64/data/ksh-20120801-37.el6_9.x86_64.rpm
+
+sudo yum install libst*
+
+sudo yum install libns*
+
+/tmp/ITM_Linux_for_SO_x86_64/data/silentInstall.sh
+/opt/IBM/ITM/bin/./itmcmd config -A -p /tmp/ITM_Linux_for_SO_x86_64/scripts/bseguros_prd.txt lz
+/opt/IBM/ITM/bin/./itmcmd agent stop lz
+
+#criar pasta
+
+mkdir /opt/IBM/ITM/start-service/
+
+#create cron file config 
+
+#everyday
+
+echo "0 0 * * * /opt/IBM/ITM/start-service/reboot.sh" > /opt/IBM/ITM/start-service/reboot.cron
+
+
+#create  file script reboot 
+
+
+#
+echo 'host=`hostname`' > /opt/IBM/ITM/start-service/reboot.sh
+ 
+#
+#stop
+
+echo '/opt/IBM/ITM/bin/./itmcmd agent stop lz' >> /opt/IBM/ITM/start-service/reboot.sh
+
+#start
+
+echo '/opt/IBM/ITM/bin/./itmcmd agent start lz ' >> /opt/IBM/ITM/start-service/reboot.sh
+
+#status
+
+echo '/opt/IBM/ITM/bin/./cinfo -r' >> /opt/IBM/ITM/start-service/reboot.sh
+
+#add cron
+
+crontab  /opt/IBM/ITM/start-service/reboot.cron
+
+#add 777 na pasta ITM
+
+chmod -R 777  /opt/IBM/ITM/
+
+#comportamento
+ 
+grep CRON /var/log/cron
+  
